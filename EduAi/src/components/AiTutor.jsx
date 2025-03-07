@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Send, Bot, User } from 'lucide-react';
+import { getGeminiResponse } from "./GeminiAPI";
 
 const AiTutor = () => {
   const [messages, setMessages] = useState([
@@ -14,7 +15,12 @@ const AiTutor = () => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    setMessages([...messages, { role: 'user', content: input }]);
+    const newMessage = [...messages, { role: 'user', content: input }]
+    setMessages(newMessage);
+
+    const botResponse = getGeminiResponse(input);
+    setMessages([...newMessage, { role: 'ai', content: botResponse }]);
+    
     setInput('');
   };
 
