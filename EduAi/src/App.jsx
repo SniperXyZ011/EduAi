@@ -19,12 +19,14 @@ function App() {
   const handleLoginSuccess = (userData) => {
     setUser(userData);
     setIsAuthenticated(true);
+    setCurrentView('dashboard');
   };
 
   const handleLogout = () => {
     setUser(null);
     setIsAuthenticated(false);
     setShowLogin(true);
+    setCurrentView('dashboard');
   };
 
   const toggleForm = () => {
@@ -35,7 +37,7 @@ function App() {
     return showLogin ? (
       <Login onToggleForm={toggleForm} onLoginSuccess={handleLoginSuccess} />
     ) : (
-      <Signup onToggleForm={toggleForm} />
+      <Signup onToggleForm={toggleForm} onLoginSuccess={handleLoginSuccess} />
     );
   }
 

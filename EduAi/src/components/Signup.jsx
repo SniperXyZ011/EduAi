@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { User, Lock, UserPlus } from 'lucide-react';
 import axios from 'axios';
 
-const Signup = ({ onToggleForm }) => {
+const Signup = ({ onToggleForm, onLoginSuccess }) => {
   const [formData, setFormData] = useState({
     fullName: '',
     userName: '',
@@ -14,9 +14,22 @@ const Signup = ({ onToggleForm }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/api/v1/user/register', formData);
-      if (response.data.success) {
-        onToggleForm(); // Switch to login form after successful registration
+      // First register the user
+      const registerResponse = await axios.post('http://localhost:8080/api/v1/user/register', formData);
+      
+      if (registerResponse.data.success) {
+        // If registration is successful, automatically log in
+        const loginResponse = await axios.post('http://localhost:8080/api/v1/user/login', {
+          userName: formData.userName,
+          password: formData.password
+        }, {
+          withCredentials: true
+        });
+
+        if (loginResponse.data) {
+          // Pass the user data up to App component
+          onLoginSuccess(loginResponse.data);
+        }
       }
     } catch (err) {
       setError(err.response?.data?.msg || 'Registration failed. Please try again.');

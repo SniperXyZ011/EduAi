@@ -9,34 +9,50 @@ export const register = async (req, res) => {
         console.log(req.body);
 
         if(!fullName || !userName || !password || !confirmPassword) {
-            return res.status(400).json({ msg: "Please fill in all fields" });
+            return res.status(400).json({ 
+                success: false,
+                msg: "Please fill in all fields" 
+            });
         }
 
-        if(password != confirmPassword) {
-            return res.status(400).json({ msg: "Passwords do not match" });
+        if(password !== confirmPassword) {
+            return res.status(400).json({ 
+                success: false,
+                msg: "Passwords do not match" 
+            });
         }
 
-        const user = User.findOne({userName});
-        console.log(user.userName);
-        if(!user){
-            return res.status(400).json({ msg: "Username already exists" });
+        const existingUser = await User.findOne({ userName: userName });
+        if(existingUser) {
+            return res.status(400).json({ 
+                success: false,
+                msg: "Username already exists" 
+            });
         }
         
         const hashPassword = await bcrypt.hash(password, 10);
-
-
-        await User.create({
-            fullName,
-            userName,
-            password : hashPassword,
+        const newUser = await User.create({
+            fullName: fullName,
+            userName: userName,
+            password: hashPassword,
         });
 
-        return res.status(200).json({
+        return res.status(201).json({
+            success: true,
             msg: "User created successfully",
-            success : true,
-        })
+            user: {
+                id: newUser._id,
+                fullName: newUser.fullName,
+                userName: newUser.userName
+            }
+        });
     } catch (err) {
-        console.error(err.message);
+        console.error("Registration Error:", err);
+        return res.status(500).json({ 
+            success: false,
+            msg: "Error in registration",
+            error: err.message 
+        });
     }
 }
 
