@@ -1,12 +1,14 @@
 import React from 'react';
 import { Brain, Sparkles, Target, Clock } from 'lucide-react';
 
-const LearningDashboard = () => {
+const LearningDashboard = ({ user }) => {
   return (
     <div className="space-y-8">
       <header className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Welcome back, Student!</h1>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Welcome back, {user?.fullName || 'Student'}!
+          </h1>
           <p className="text-gray-600 mt-1">Your personalized learning journey continues</p>
         </div>
         <div className="flex items-center gap-4">
@@ -15,6 +17,34 @@ const LearningDashboard = () => {
           </button>
         </div>
       </header>
+
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="p-3 bg-indigo-50 rounded-lg">
+            <Brain className="w-6 h-6 text-indigo-600" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">Your Learning Profile</h2>
+            <p className="text-sm text-gray-600">@{user?.userName}</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <p className="text-sm text-gray-600">Member Since</p>
+            <p className="text-lg font-semibold text-gray-900">
+              {new Date().toLocaleDateString()}
+            </p>
+          </div>
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <p className="text-sm text-gray-600">Courses Enrolled</p>
+            <p className="text-lg font-semibold text-gray-900">3</p>
+          </div>
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <p className="text-sm text-gray-600">Learning Hours</p>
+            <p className="text-lg font-semibold text-gray-900">12.5 hrs</p>
+          </div>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
